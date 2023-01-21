@@ -18,7 +18,26 @@
     </form>
     <ul id="users"></ul>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+
+
+    window.onload = function() {
+        //network call to fetch data from crudcrud on page load
+    axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
+                .then((response)=>{
+                    data = response.data;
+                    data.forEach(element => {
+                        showUserOnScreen(element)
+                    });
+                    //showUserOnScreen(response.data);
+                    console.log(response);
+                }).
+                catch((err)=>{
+                    console.log(err);
+                });
+    };
+
    function saveTolocalstorage(event){
     event.preventDefault();
     const name = event.target.username.value;
@@ -34,8 +53,19 @@
         email,
         phone
     }
-    localStorage.setItem(obj.email,JSON.stringify(obj));
-    showUserOnScreen(obj);
+
+    //network call
+    axios.post('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData',obj)
+                .then((response)=>{
+                    showUserOnScreen(response.data);
+                    console.log(response);
+                }).
+                catch((err)=>{
+                    console.log(err);
+                });
+
+    //localStorage.setItem(obj.email,JSON.stringify(obj));
+    //showUserOnScreen(obj);
     }
 
     function showUserOnScreen(obj){
