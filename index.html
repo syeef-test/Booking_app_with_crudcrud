@@ -89,7 +89,7 @@
     function showUserOnScreen(obj){
         const parentElem = document.getElementById('users');
         //const childElem = document.createElement('li');
-        const childElem = `<li id=${obj._id}>${obj.name}-${obj.email}<button onclick=deleteUser('${obj._id}')>Delete</button><button onclick=editUserDetails('${obj._id},${obj.email},${obj.name},${obj.phone}')>Edit</button></li>`;
+        const childElem = `<li id=${obj._id}>${obj.name}-${obj.email}<button onclick=deleteUser('${obj._id}')>Delete</button><button onclick=editUserDetails('${obj._id}','${obj.email}','${obj.name}','${obj.phone}')>Edit</button></li>`;
 
         parentElem.innerHTML = parentElem.innerHTML + childElem;
 
