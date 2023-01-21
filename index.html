@@ -22,21 +22,21 @@
 <script>
 
 
-    window.onload = function() {
-        //network call to fetch data from crudcrud on page load
-    axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
-                .then((response)=>{
-                    data = response.data;
-                    data.forEach(element => {
-                        showUserOnScreen(element)
-                    });
-                    //showUserOnScreen(response.data);
-                    console.log(response);
-                }).
-                catch((err)=>{
-                    console.log(err);
-                });
-    };
+    // window.onload = function() {
+    //     //network call to fetch data from crudcrud on page load method 1
+    // axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
+    //             .then((response)=>{
+    //                 data = response.data;
+    //                 data.forEach(element => {
+    //                     showUserOnScreen(element)
+    //                 });
+    //                 //showUserOnScreen(response.data);
+    //                 console.log(response);
+    //             }).
+    //             catch((err)=>{
+    //                 console.log(err);
+    //             });
+    // };
 
    function saveTolocalstorage(event){
     event.preventDefault();
@@ -68,17 +68,41 @@
     //showUserOnScreen(obj);
     }
 
+    window.addEventListener("DOMContentLoaded",()=>{
+            //network call to fetch data from crudcrud on page load method2
+            axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
+                        .then((response)=>{
+                            data = response.data;
+                            data.forEach(element => {
+                                showUserOnScreen(element)
+                            });
+                            //showUserOnScreen(response.data);
+                            console.log(response);
+                        }).
+                        catch((err)=>{
+                            console.log(err);
+                        });
+    });
+
     function showUserOnScreen(obj){
         const parentElem = document.getElementById('users');
         const childElem = document.createElement('li');
+
+        const id = obj._id;
+        //console.log(obj.name,id);
         childElem.textContent = obj.name + '-' + obj.email + '-' + obj.phone;
 
         const deleteButton = document.createElement('input');
         deleteButton.type = 'button';
         deleteButton.value = 'Delete';
         deleteButton.onclick = () =>{
-            localStorage.removeItem(obj.email);
-            parentElem.removeChild(childElem);
+
+            axios
+            .delete('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData/'+id)
+            .then(res=>console(res))
+            .catch(err=>console.log(err));//delete success but need to display data again
+            //localStorage.removeItem(obj.email);
+            //parentElem.removeChild(childElem);
         }
 
         const editButton = document.createElement('input');
