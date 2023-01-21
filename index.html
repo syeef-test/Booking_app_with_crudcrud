@@ -84,6 +84,8 @@
                         });
     });
 
+   
+
     function showUserOnScreen(obj){
         const parentElem = document.getElementById('users');
         const childElem = document.createElement('li');
@@ -99,8 +101,12 @@
 
             axios
             .delete('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData/'+id)
-            .then(res=>console(res))
-            .catch(err=>console.log(err));//delete success but need to display data again
+            .then(res=>{
+                console.log(res);
+                
+                parentElem.removeChild(childElem);//element removed from parent element
+            })
+            .catch(err=>console.log(err));//delete success 
             //localStorage.removeItem(obj.email);
             //parentElem.removeChild(childElem);
         }
