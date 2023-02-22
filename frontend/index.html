@@ -1,147 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <form onsubmit="saveTolocalstorage(event)">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" required>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
-        <label for="phone">Phone</label>
-        <input type="text" name="phone" id="phone">
-        <input class="btn" type="submit" value="Submit">
+  </head>
+  <body>
+    <form onsubmit="addUser(event)">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required />
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required />
+      <label for="phone">Phone</label>
+      <input type="text" name="phone" id="phone" />
+      <input class="btn" type="submit" value="Submit" />
     </form>
     <ul id="users"></ul>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    async function addUser(event) {
+      try {
+        event.preventDefault();
+        const name = event.target.username.value;
+        const email = event.target.email.value;
+        const phone = event.target.phone.value;
 
+        const obj = {
+          name,
+          email,
+          phone,
+        };
 
-    // window.onload = function() {
-    //     //network call to fetch data from crudcrud on page load method 1
-    // axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
-    //             .then((response)=>{
-    //                 data = response.data;
-    //                 data.forEach(element => {
-    //                     showUserOnScreen(element)
-    //                 });
-    //                 //showUserOnScreen(response.data);
-    //                 console.log(response);
-    //             }).
-    //             catch((err)=>{
-    //                 console.log(err);
-    //             });
-    // };
+        //network call
+        const response = await axios.post(
+          "http://127.0.0.1:3000/add_user",
+          obj
+        );
 
-   function saveTolocalstorage(event){
-    event.preventDefault();
-    const name = event.target.username.value;
-    // console.log(name);
-    const email = event.target.email.value;
-    const phone = event.target.phone.value;
-    // localStorage.setItem('name',name);
-    // localStorage.setItem('email',email);
-    // localStorage.setItem('phone',phone);
-
-    const obj = {
-        name,
-        email,
-        phone
+        if (response.status === 201) {
+          console.log("Data inserted");
+          showUserOnScreen(response.data);
+        } else {
+          console.log("Data not inserted");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    //network call
-    axios.post('https://crudcrud.com/api/cfd5584e79de4cb8a9c94cd2c61a560f/appoinmentData',obj)
-                .then((response)=>{
-                    showUserOnScreen(response.data);
-                    console.log(response);
-                }).
-                catch((err)=>{
-                    console.log(err);
-                });
+    window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        //network call to fetch data from crudcrud on page load method2
+        const response = await axios.get("http://127.0.0.1:3000/get_user");
 
-    //localStorage.setItem(obj.email,JSON.stringify(obj));
-    //showUserOnScreen(obj);
-    }
-
-    window.addEventListener("DOMContentLoaded",()=>{
-            //network call to fetch data from crudcrud on page load method2
-            axios.get('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData')
-                        .then((response)=>{
-                            data = response.data;
-                            data.forEach(element => {
-                                showUserOnScreen(element)
-                            });
-                            //showUserOnScreen(response.data);
-                            console.log(response);
-                        }).
-                        catch((err)=>{
-                            console.log(err);
-                        });
+        data = response.data;
+        if (response.data.length !== 0) {
+          data.forEach((element) => {
+            console.log(element);
+            showUserOnScreen(element);
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     });
 
-   
-
-    function showUserOnScreen(obj){
-        const parentElem = document.getElementById('users');
+    function showUserOnScreen(obj) {
+      try {
+        const parentElem = document.getElementById("users");
         //const childElem = document.createElement('li');
-        const childElem = `<li id=${obj._id}>${obj.name}-${obj.email}<button onclick=deleteUser('${obj._id}')>Delete</button><button onclick=editUserDetails('${obj._id}','${obj.email}','${obj.name}','${obj.phone}')>Edit</button></li>`;
+        const childElem = `<li id=${obj.id}>${obj.name}-${obj.email}<button onclick=deleteUser('${obj.id}')>Delete</button><button onclick=editUserDetails('${obj.id}','${obj.email}','${obj.name}','${obj.phone}')>Edit</button></li>`;
 
         parentElem.innerHTML = parentElem.innerHTML + childElem;
-
-       
-
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    function deleteUserFromScreen(userId){
-                const parentElem = document.getElementById('users');
-                const childElem = document.getElementById(userId);
-                parentElem.removeChild(childElem);//element removed from parent element
+    function deleteUserFromScreen(userId) {
+      try {
+        const parentElem = document.getElementById("users");
+        const childElem = document.getElementById(userId);
+        parentElem.removeChild(childElem); //element removed from parent element
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-
-    
-
-    function deleteUser(userId){
-        console.log(userId);
-        axios
-            .delete(`https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData/${userId}`)
-            .then(res=>{
-                console.log(res);
-                deleteUserFromScreen(userId);
-            })
-            .catch(err=>console.log(err));
+    async function deleteUser(userId) {
+      try {
+        const response = await axios.delete(
+          `http://127.0.0.1:3000/delete_user/${userId}`
+        );
+        if (response.status === 200) {
+          //console.log(response.status);
+          deleteUserFromScreen(userId);
+        } else {
+          console.log("Not Deleted");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
+    function editUserDetails(userId, emailId, name, phone) {
+      try {
+        console.log(userId, emailId, name, phone);
 
-    function editUserDetails(userId,emailId,name,phone){
-        console.log(userId,emailId,name,phone);
-        
-        
-         document.getElementById('username').value = name;
-         document.getElementById('email').value = emailId;
-         document.getElementById('phone').value = phone;
+        document.getElementById("username").value = name;
+        document.getElementById("email").value = emailId;
+        document.getElementById("phone").value = phone;
 
         deleteUser(userId);
-
-        
+      } catch (error) {
+        console.log(error);
+      }
     }
-
-    // function editUserDetails(emailId,name,phone,userId){
-    //     axios
-    //     .patch('https://crudcrud.com/api/19ad2f3c04ce434ba4e067b7407f07f5/appoinmentData/'+userId,{
-    //         name:name,
-    //         email:emailId,
-    //         phone:phone
-    //     })
-    //     .then(res=>console.log(res))
-    //     .catch(err=>console.log(err));
-
-      
-    // }
-</script>
+  </script>
 </html>
